@@ -8,6 +8,7 @@ NiceGUI web app with Google OAuth and SQLite database.
 - **ORM**: SQLModel (SQLAlchemy + Pydantic)
 - **Migrations**: Alembic
 - **Auth**: Authlib (Google OAuth via OIDC)
+- **i18n**: python-i18n (JSON locale files, fallback to English)
 - **Runtime**: Python 3.14, managed by uv
 - **Build**: hatchling (src layout)
 
@@ -18,6 +19,7 @@ NiceGUI web app with Google OAuth and SQLite database.
 - `src/vinha/db.py` - SQLModel engine and session factory
 - `src/vinha/models.py` - SQLModel table models
 - `src/vinha/pages/` - NiceGUI page handlers (one file per page)
+- `src/vinha/locales/` - i18n translation files (`en.json`, `pt.json`)
 - `alembic/` - Migration scripts (auto-generated, `env.py` imports SQLModel metadata)
 
 ## Commands
@@ -37,5 +39,7 @@ uv run alembic downgrade -1                                 # Roll back one migr
 - Auth state lives in Starlette `request.session` (set by SessionMiddleware)
 - NiceGUI pages accept `request: Request` param to read session data
 - Use absolute imports with `vinha.` prefix (e.g. `from vinha.models import User`)
+- Translations use `t(key, **kwargs)` via python-i18n; locale files live in `src/vinha/locales/`
+- User language is auto-detected from `Accept-Language` on first login, switchable from the home page
 - Environment secrets loaded from `.env` via python-dotenv
 - Never commit `.env` or `vinha.db`

@@ -1,6 +1,6 @@
 # Vinha Digital
 
-NiceGUI web application with Google OAuth login, backed by SQLite via SQLModel.
+NiceGUI web application with Google OAuth login, backed by SQLite via SQLModel. Supports English and Portuguese (auto-detected, user-switchable).
 
 ## Prerequisites
 
