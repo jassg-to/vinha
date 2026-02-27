@@ -1,14 +1,16 @@
 from fastapi import Request
 from nicegui import ui
 
+from vinha.i18n import t
+
 
 @ui.page("/login")
 def login_page(request: Request):
     redirect = request.query_params.get("redirect", "/")
 
     with ui.column().classes("absolute-center items-center gap-4"):
-        ui.label("Vinha").classes("text-h4 text-weight-bold")
+        ui.label(t("app_name")).classes("text-h4 text-weight-bold")
         ui.button(
-            "Sign in with Google",
+            t("sign_in_with_google"),
             on_click=lambda: ui.navigate.to(f"/auth/login?redirect={redirect}"),
         ).classes("q-px-xl")

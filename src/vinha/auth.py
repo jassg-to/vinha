@@ -8,6 +8,7 @@ from sqlmodel import select
 from starlette.middleware.base import BaseHTTPMiddleware
 
 from vinha.db import get_session
+from vinha.i18n import set_locale
 from vinha.models import User
 
 oauth = OAuth()
@@ -26,6 +27,8 @@ UNRESTRICTED_PREFIXES = ("/_nicegui", "/static", "/_next")
 class AuthMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         path = request.scope["path"]
+
+        set_locale(request.session.get("language", "en"))
 
         if path in UNRESTRICTED_PATHS or any(path.startswith(p) for p in UNRESTRICTED_PREFIXES):
             return await call_next(request)
@@ -54,15 +57,20 @@ async def auth_callback(request: Request):
             user.name = userinfo.get("name", user.name)
             user.picture = userinfo.get("picture", user.picture)
         else:
+            accept_lang = request.headers.get("accept-language", "")
+            lang = "pt" if accept_lang.startswith("pt") else "en"
             user = User(
                 google_sub=userinfo["sub"],
                 email=userinfo["email"],
                 name=userinfo.get("name", ""),
                 picture=userinfo.get("picture"),
+                language=lang,
             )
             session.add(user)
         session.commit()
+        language = user.language
 
+    request.session["language"] = language
     request.session["user"] = {
         "email": userinfo["email"],
         "name": userinfo.get("name", ""),

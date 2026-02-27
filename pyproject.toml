@@ -12,6 +12,7 @@ dependencies = [
     "httpx>=0.28.1",
     "nicegui>=3.8.0",
     "python-dotenv>=1.2.1",
+    "python-i18n>=0.3.9",
     "sqlmodel>=0.0.37",
 ]
 

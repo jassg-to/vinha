@@ -10,5 +10,6 @@ class User(SQLModel, table=True):
     email: str
     name: str
     picture: Optional[str] = None
+    language: str = Field(default="en")
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     last_login: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
