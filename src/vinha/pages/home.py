@@ -9,8 +9,15 @@ from vinha.models import User
 
 @ui.page("/")
 def home_page(request: Request):
-    set_locale(request.session.get("language", "en"))
     user = request.session.get("user", {})
+    email = user.get("email")
+    lang = "en"
+    if email:
+        with get_session() as session:
+            db_user = session.exec(select(User).where(User.email == email)).first()
+            if db_user:
+                lang = db_user.language
+    set_locale(lang)
 
     def switch_language(new_lang: str):
         request.session["language"] = new_lang
