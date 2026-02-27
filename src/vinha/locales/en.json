@@ -1,6 +1,8 @@
 {
-  "app_name": "Vinha Digital",
-  "sign_in_with_google": "Sign in with Google",
-  "welcome": "Welcome, %{name}",
-  "logout": "Logout"
+  "en": {
+    "app_name": "Vinha Digital",
+    "sign_in_with_google": "Sign in with Google",
+    "welcome": "Welcome, %{name}",
+    "logout": "Logout"
+  }
 }

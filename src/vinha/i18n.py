@@ -5,6 +5,7 @@ import i18n
 
 i18n.set("load_path", [str(Path(__file__).parent / "locales")])
 i18n.set("file_format", "json")
+i18n.set("filename_format", "{locale}.{format}")
 i18n.set("fallback", "en")
 
 _current_locale: ContextVar[str] = ContextVar("locale", default="en")

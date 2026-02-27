@@ -21,8 +21,8 @@ app.add_middleware(SessionMiddleware, secret_key=os.getenv("STORAGE_SECRET", "ch
 
 
 def main():
-    ui.run(title="Vinha", port=8080, storage_secret=os.getenv("STORAGE_SECRET", "change-me"))
+    ui.run(title="Vinha", port=8080, reload=False, storage_secret=os.getenv("STORAGE_SECRET", "change-me"))
 
 
-if __name__ == "__main__":
+if __name__ in {"__main__", "__mp_main__"}:
     main()

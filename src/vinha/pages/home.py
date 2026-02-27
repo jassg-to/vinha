@@ -3,12 +3,13 @@ from nicegui import ui
 from sqlmodel import select
 
 from vinha.db import get_session
-from vinha.i18n import get_locale, t
+from vinha.i18n import get_locale, set_locale, t
 from vinha.models import User
 
 
 @ui.page("/")
 def home_page(request: Request):
+    set_locale(request.session.get("language", "en"))
     user = request.session.get("user", {})
 
     def switch_language(new_lang: str):
