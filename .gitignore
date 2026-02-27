@@ -9,5 +9,11 @@ wheels/
 # Virtual environments
 .venv
 
+# Secrets
+.env
+
+# Database
+vinha.db
+
 # LLM Agents
 .claude

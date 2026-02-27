@@ -6,4 +6,18 @@ readme = "README.md"
 license = "AGPL-3.0-only"
 license-files = ["LICENSE"]
 requires-python = ">=3.14,<3.15"
-dependencies = []
+dependencies = [
+    "alembic>=1.18.4",
+    "authlib>=1.6.8",
+    "httpx>=0.28.1",
+    "nicegui>=3.8.0",
+    "python-dotenv>=1.2.1",
+    "sqlmodel>=0.0.37",
+]
+
+[project.scripts]
+vinha = "vinha.main:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
