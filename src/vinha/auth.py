@@ -50,7 +50,7 @@ class Translate:
         self.locale = locale
 
     def __call__(self, key: str, **kwargs: str) -> str:
-        return i18n.t(key, **kwargs)
+        return i18n.t(key, locale=self.locale, **kwargs)
 
 
 async def login(request: Request):
