@@ -1,6 +1,8 @@
 import os
 from datetime import datetime, timezone
+from pathlib import Path
 
+import i18n
 from authlib.integrations.starlette_client import OAuth
 from fastapi import Request
 from fastapi.responses import RedirectResponse
@@ -8,7 +10,6 @@ from sqlmodel import select
 from starlette.middleware.base import BaseHTTPMiddleware
 
 from vinha.db import get_session
-from vinha.i18n import set_locale
 from vinha.models import User
 
 oauth = OAuth()
@@ -23,12 +24,17 @@ oauth.register(
 UNRESTRICTED_PATHS = {"/login", "/auth/login", "/auth/callback"}
 UNRESTRICTED_PREFIXES = ("/_nicegui", "/static", "/_next")
 
+i18n.set("load_path", [str(Path(__file__).parent / "locales")])
+i18n.set("file_format", "json")
+i18n.set("filename_format", "{locale}.{format}")
+i18n.set("fallback", "en")
+
 
 class AuthMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         path = request.scope["path"]
 
-        set_locale(request.session.get("language", "en"))
+        request.state.translate = Translate(request.session.get("language", "en"))
 
         if path in UNRESTRICTED_PATHS or any(path.startswith(p) for p in UNRESTRICTED_PREFIXES):
             return await call_next(request)
@@ -37,6 +43,14 @@ class AuthMiddleware(BaseHTTPMiddleware):
             return RedirectResponse(f"/login?redirect={path}")
 
         return await call_next(request)
+
+
+class Translate:
+    def __init__(self, locale: str):
+        self.locale = locale
+
+    def __call__(self, key: str, **kwargs: str) -> str:
+        return i18n.t(key, **kwargs)
 
 
 async def login(request: Request):

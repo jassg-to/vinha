@@ -2,13 +2,14 @@ from fastapi import Request
 from nicegui import ui
 from sqlmodel import select
 
+from vinha.auth import Translate
 from vinha.db import get_session
-from vinha.i18n import get_locale, set_locale, t
 from vinha.models import User
 
 
 @ui.page("/")
 def home_page(request: Request):
+    t: Translate = request.state.translate
     user = request.session.get("user", {})
     email = user.get("email")
     lang = "en"
@@ -17,7 +18,7 @@ def home_page(request: Request):
             db_user = session.exec(select(User).where(User.email == email)).first()
             if db_user:
                 lang = db_user.language
-    set_locale(lang)
+    t.locale = lang
 
     def switch_language(new_lang: str):
         request.session["language"] = new_lang
@@ -38,8 +39,4 @@ def home_page(request: Request):
 
         with ui.row().classes("gap-2"):
             ui.button(t("logout"), on_click=lambda: ui.navigate.to("/auth/logout")).props("outline")
-            ui.toggle(
-                {"en": "EN", "pt": "PT"},
-                value=get_locale(),
-                on_change=lambda e: switch_language(e.value),
-            )
+            ui.toggle({"en": "EN", "pt": "PT"}, value=t.locale, on_change=lambda e: switch_language(e.value))
