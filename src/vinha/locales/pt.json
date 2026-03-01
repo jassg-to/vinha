@@ -3,6 +3,7 @@
     "app_name": "Vinha Digital",
     "sign_in_with_google": "Entrar com Google",
     "welcome": "Boas vindas, %{name}",
-    "logout": "Sair"
+    "logout": "Sair",
+    "source_code": "Código-fonte"
   }
 }

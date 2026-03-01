@@ -25,3 +25,8 @@ build-backend = "hatchling.build"
 
 [tool.ruff]
 line-length = 120
+
+[dependency-groups]
+dev = [
+    "pip-licenses>=5.5.1",
+]
