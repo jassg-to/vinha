@@ -6,6 +6,7 @@ load_dotenv()
 
 from nicegui import app, ui  # noqa: E402
 from starlette.middleware.sessions import SessionMiddleware  # noqa: E402
+from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware  # noqa: E402
 
 import vinha.pages.home  # noqa: E402, F401
 import vinha.pages.login  # noqa: E402, F401
@@ -17,6 +18,7 @@ app.add_route("/auth/logout", logout, methods=["GET"])
 
 app.add_middleware(AuthMiddleware)
 app.add_middleware(SessionMiddleware, secret_key=os.environ["STORAGE_SECRET"])
+app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
 
 
 def main():
