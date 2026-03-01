@@ -87,7 +87,7 @@ fi
 
 # --- install dependencies ---
 echo "[+] Installing dependencies with uv..."
-sudo -u deploy bash -c "cd ${APP_DIR} && UV_PYTHON_INSTALL_DIR=${UV_PYTHON_DIR} uv sync --frozen"
+sudo -u deploy bash -c "cd ${APP_DIR} && UV_PYTHON_INSTALL_DIR=${UV_PYTHON_DIR} uv sync --frozen --link-mode copy"
 # Fix venv permissions (created by deploy, needs to be readable by service user)
 chown -R "deploy:${SERVICE_USER}" "${APP_DIR}/.venv"
 find "${APP_DIR}/.venv" -type f -exec chmod 640 {} +
