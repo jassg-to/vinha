@@ -156,7 +156,7 @@ chmod 440 "${SUDOERS_FILE}"
 
 # --- run initial migration ---
 echo "[+] Running initial migration..."
-sudo -u "${SERVICE_USER}" bash -c "cd ${APP_DIR} && ${APP_DIR}/.venv/bin/alembic -c ${APP_DIR}/alembic.ini upgrade head"
+cd "${APP_DIR}" && sudo -u "${SERVICE_USER}" "${APP_DIR}/.venv/bin/alembic" upgrade head
 
 # --- enable and start service ---
 echo "[+] Enabling and starting vinha-${INSTANCE}..."
