@@ -20,7 +20,16 @@ app.add_middleware(SessionMiddleware, secret_key=os.environ["STORAGE_SECRET"])
 
 
 def main():
-    ui.run(title="Vinha", port=8080, reload=True, storage_secret=os.environ["STORAGE_SECRET"])
+    port = int(os.environ.get("PORT", "8080"))
+    reload = os.environ.get("RELOAD", "false").lower() == "true"
+    ui.run(
+        title="Vinha",
+        host="0.0.0.0",
+        port=port,
+        reload=reload,
+        show=False,
+        storage_secret=os.environ["STORAGE_SECRET"],
+    )
 
 
 if __name__ in {"__main__", "__mp_main__"}:

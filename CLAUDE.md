@@ -21,6 +21,8 @@ NiceGUI web app with Google OAuth and SQLite database.
 - `src/vinha/pages/` - NiceGUI page handlers (one file per page)
 - `src/vinha/locales/` - i18n translation files (`en.json`, `pt.json`)
 - `alembic/` - Migration scripts (auto-generated, `env.py` imports SQLModel metadata)
+- `scripts/setup-instance.sh` - Server instance provisioning (users, dirs, systemd, permissions)
+- `scripts/teardown-instance.sh` - Removes an instance and all its resources
 
 ## Commands
 
@@ -30,6 +32,40 @@ uv run alembic upgrade head                                 # Apply all migratio
 uv run alembic revision --autogenerate -m "description"     # Generate migration from model changes
 uv run alembic downgrade -1                                 # Roll back one migration
 ```
+
+## Environment Variables
+
+All read from `.env` via python-dotenv. Only `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and `STORAGE_SECRET` are required.
+
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `GOOGLE_CLIENT_ID` | (required) | OAuth 2.0 Client ID |
+| `GOOGLE_CLIENT_SECRET` | (required) | OAuth 2.0 Client Secret |
+| `STORAGE_SECRET` | (required) | Session signing + NiceGUI storage key |
+| `DATABASE_URL` | `sqlite:///vinha.db` | SQLAlchemy DB URL (use absolute path in prod) |
+| `PORT` | `8080` | Server listen port |
+| `RELOAD` | `false` | Hot-reload on file changes (set `true` for local dev) |
+
+## Deployment
+
+Server instances are managed with `scripts/setup-instance.sh` and `scripts/teardown-instance.sh`. Each instance gets:
+
+- A dedicated system user `vinha-<instance>` (no shell, no sudo)
+- App code at `/opt/vinha-<instance>/` (read-only for the runtime user)
+- Database at `/var/lib/vinha-<instance>/` (sole writable location, enforced by systemd `ProtectSystem=strict`)
+- A shared `deploy` user that owns code and can restart services
+
+```bash
+# Provision (run as root)
+sudo ./scripts/setup-instance.sh prod 8080 https://github.com/jassg-to/vinha.git
+
+# Teardown (run as root)
+sudo ./scripts/teardown-instance.sh prod
+```
+
+Prerequisites: uv and a reverse proxy installed on the server.
+
+The server at `kiva.gay` is accessed via `ssh claude@kiva.gay` (full sudo).
 
 ## Conventions
 

@@ -37,6 +37,24 @@ uv run vinha
 
 The app will be available at `http://localhost:8080`.
 
+## Environment Variables
+
+Configured in `.env` (see `.env.example`). Required variables:
+
+| Variable | Purpose |
+|----------|---------|
+| `GOOGLE_CLIENT_ID` | OAuth 2.0 Client ID |
+| `GOOGLE_CLIENT_SECRET` | OAuth 2.0 Client Secret |
+| `STORAGE_SECRET` | Session signing key (generate with `python -c "import secrets; print(secrets.token_urlsafe(32))"`) |
+
+Optional (with defaults):
+
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `DATABASE_URL` | `sqlite:///vinha.db` | Database URL (use absolute path in production) |
+| `PORT` | `8080` | Server port |
+| `RELOAD` | `false` | Hot-reload for development |
+
 ## Development
 
 ```bash
@@ -49,3 +67,17 @@ uv run alembic upgrade head
 # Roll back one migration
 uv run alembic downgrade -1
 ```
+
+## Deployment
+
+Each server instance is provisioned with `scripts/setup-instance.sh`, which creates an isolated Linux user, app directory, database directory, and systemd service. The runtime user can only write to the database directory.
+
+```bash
+# Provision a new instance (run as root)
+sudo ./scripts/setup-instance.sh <instance> <port> <git-repo-url>
+
+# Remove an instance
+sudo ./scripts/teardown-instance.sh <instance>
+```
+
+Prerequisites: [uv](https://docs.astral.sh/uv/) installed system-wide, a reverse proxy for HTTPS.
