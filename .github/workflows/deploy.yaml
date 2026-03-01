@@ -1,0 +1,55 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main, develop]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: ${{ github.ref == 'refs/heads/main' && 'prod' || 'dev' }}
+    concurrency:
+      group: deploy-${{ vars.SERVICE_NAME }}
+      cancel-in-progress: false
+    steps:
+      - name: Connect to Tailscale
+        if: ${{ secrets.TAILSCALE_CLIENT_ID != '' }}
+        uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ secrets.TAILSCALE_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TAILSCALE_CLIENT_SECRET }}
+          tags: tag:ci
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_SSH_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script_stop: true
+          script: |
+            set -euo pipefail
+            cd ${{ secrets.INSTALL_PATH }}
+
+            git fetch origin
+            git reset --hard origin/${{ github.ref_name }}
+
+            # Fix source permissions (setgid handles group, just need modes)
+            find . -type d -exec chmod 2750 {} +
+            find . -type f -exec chmod 640 {} +
+
+            # Install/update dependencies
+            UV_PYTHON_INSTALL_DIR=/opt/uv-python uv sync --frozen --link-mode copy
+
+            # Fix venv permissions
+            find .venv -type d -exec chmod 2750 {} +
+            find .venv -type f -exec chmod 640 {} +
+            find .venv/bin -type f -exec chmod 750 {} +
+
+            # Run migrations as service user, then restart
+            sudo -u ${{ secrets.RUNTIME_USER }} \
+              ${{ secrets.INSTALL_PATH }}/.venv/bin/alembic \
+              -c ${{ secrets.INSTALL_PATH }}/alembic.ini upgrade head
+            sudo systemctl restart ${{ vars.SERVICE_NAME }}
