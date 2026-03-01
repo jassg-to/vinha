@@ -74,7 +74,10 @@ Each server instance is provisioned with `scripts/setup-instance.sh`, which crea
 
 ```bash
 # Provision a new instance (run as root)
-sudo ./scripts/setup-instance.sh <instance> <port> <git-repo-url>
+curl -fsSL https://raw.githubusercontent.com/jassg-to/vinha/main/scripts/setup-instance.sh | sudo bash -s <instance> <port> https://github.com/jassg-to/vinha.git
+
+# Or from a local clone
+sudo ./scripts/setup-instance.sh <instance> <port> https://github.com/jassg-to/vinha.git
 
 # Remove an instance
 sudo ./scripts/teardown-instance.sh <instance>
