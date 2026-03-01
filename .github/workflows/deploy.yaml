@@ -30,7 +30,6 @@ jobs:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_SSH_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
-          script_stop: true
           script: |
             set -euo pipefail
             cd ${{ secrets.INSTALL_PATH }}
@@ -52,6 +51,5 @@ jobs:
 
             # Run migrations as service user, then restart
             sudo -u ${{ secrets.RUNTIME_USER }} \
-              ${{ secrets.INSTALL_PATH }}/.venv/bin/alembic \
-              -c ${{ secrets.INSTALL_PATH }}/alembic.ini upgrade head
+              ${{ secrets.INSTALL_PATH }}/.venv/bin/alembic upgrade head
             sudo systemctl restart ${{ vars.SERVICE_NAME }}
