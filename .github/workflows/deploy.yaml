@@ -13,9 +13,11 @@ jobs:
     concurrency:
       group: deploy-${{ vars.SERVICE_NAME }}
       cancel-in-progress: false
+    env:
+      HAS_TAILSCALE: ${{ secrets.TAILSCALE_CLIENT_ID }}
     steps:
       - name: Connect to Tailscale
-        if: ${{ secrets.TAILSCALE_CLIENT_ID != '' }}
+        if: env.HAS_TAILSCALE != ''
         uses: tailscale/github-action@v4
         with:
           oauth-client-id: ${{ secrets.TAILSCALE_CLIENT_ID }}
