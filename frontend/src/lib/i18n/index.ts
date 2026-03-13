@@ -4,8 +4,12 @@ register('en-CA', () => import('./en-CA.json'));
 register('pt-BR', () => import('./pt-BR.json'));
 
 const SUPPORTED = ['en-CA', 'pt-BR'];
+const LOCALE_KEY = 'locale';
 
 function detectLocale(): string {
+	const saved = localStorage.getItem(LOCALE_KEY);
+	if (saved && SUPPORTED.includes(saved)) return saved;
+
 	const nav = getLocaleFromNavigator() ?? 'en-CA';
 	return (
 		SUPPORTED.find((l) => nav === l) ??
@@ -21,6 +25,9 @@ export function initI18n() {
 	});
 
 	locale.subscribe((l) => {
-		if (l) document.documentElement.lang = l;
+		if (l) {
+			document.documentElement.lang = l;
+			localStorage.setItem(LOCALE_KEY, l);
+		}
 	});
 }
