@@ -11,6 +11,14 @@ backend/    — FastAPI async API (Python, uv-managed)
 
 ## Running Dev Servers
 
+Both servers at once (stops both on Ctrl+C):
+
+```powershell
+.\dev.ps1
+```
+
+Or individually:
+
 ```bash
 # Backend (port 8080)
 cd backend && uv run uvicorn evinha.main:app --port 8080 --reload

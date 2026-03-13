@@ -18,20 +18,27 @@ Spiritist Centre operations management web app built for [Joanna de Angelis Spir
 
 2. Fill in your Google OAuth credentials and a random JWT secret in `.env`.
 
-3. Install and run the backend:
+3. Install dependencies:
 
    ```bash
-   cd backend
-   uv sync
-   uv run uvicorn evinha.main:app --port 8080 --reload
+   cd backend && uv sync
+   cd frontend && npm install
    ```
 
-4. In a separate terminal, install and run the frontend:
+4. Run both dev servers (stops both on Ctrl+C):
+
+   ```powershell
+   .\dev.ps1
+   ```
+
+   Or run them individually in separate terminals:
 
    ```bash
-   cd frontend
-   npm install
-   npm run dev
+   # Backend (port 8080)
+   cd backend && uv run uvicorn evinha.main:app --port 8080 --reload
+
+   # Frontend (port 5173)
+   cd frontend && npm run dev
    ```
 
 5. Open http://localhost:5173 in your browser.
