@@ -4,6 +4,8 @@ interface User {
 	email: string;
 	name: string;
 	picture: string;
+	is_admin: boolean;
+	sections: Record<string, string>;
 }
 
 let user = $state<User | null>(null);

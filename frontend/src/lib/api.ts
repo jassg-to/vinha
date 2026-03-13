@@ -25,5 +25,7 @@ async function request(
 export const api = {
 	get: (path: string) => request(path),
 	post: (path: string, body?: unknown) =>
-		request(path, { method: 'POST', body: body ? JSON.stringify(body) : undefined })
+		request(path, { method: 'POST', body: body ? JSON.stringify(body) : undefined }),
+	patch: (path: string, body?: unknown) =>
+		request(path, { method: 'PATCH', body: body ? JSON.stringify(body) : undefined })
 };

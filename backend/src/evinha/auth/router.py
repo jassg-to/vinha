@@ -2,6 +2,7 @@ from fastapi import APIRouter, Cookie, Response
 from fastapi.responses import RedirectResponse
 
 from evinha.config import settings
+from evinha.users.repository import upsert_user_on_login
 
 from .google import exchange_code, get_authorization_url
 from .jwt import COOKIE_NAME, clear_auth_cookie, create_token, decode_token, set_auth_cookie
@@ -18,7 +19,18 @@ async def login_google() -> RedirectResponse:
 @router.get("/callback")
 async def auth_callback(code: str) -> RedirectResponse:
     user_info = await exchange_code(code)
-    token = create_token(user_info)
+    user_record = await upsert_user_on_login(
+        email=user_info["email"],
+        name=user_info["name"],
+        picture=user_info["picture"],
+    )
+    token = create_token({
+        "email": user_record["email"],
+        "name": user_record["name"],
+        "picture": user_record["picture"],
+        "is_admin": user_record["is_admin"],
+        "sections": user_record["sections"],
+    })
     response = RedirectResponse(url=settings.FRONTEND_URL, status_code=302)
     set_auth_cookie(response, token)
     return response
@@ -37,6 +49,8 @@ async def get_current_user(
         "email": payload["email"],
         "name": payload["name"],
         "picture": payload["picture"],
+        "is_admin": payload.get("is_admin", False),
+        "sections": payload.get("sections", {}),
     }
 
 

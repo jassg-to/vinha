@@ -6,3 +6,4 @@ __pycache__/
 .venv/
 frontend/build/
 frontend/.svelte-kit/
+service-account.json

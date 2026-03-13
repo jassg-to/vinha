@@ -28,12 +28,22 @@
 		{/if}
 		<h1 class="text-2xl font-bold">{$_('dashboard.welcome', { values: { name: auth.user.name } })}</h1>
 		<p class="text-gray-600">{auth.user.email}</p>
-		<button
-			onclick={() => logout()}
-			class="rounded bg-primary px-4 py-2 text-white hover:bg-primary-dark"
-		>
-			{$_('dashboard.logout')}
-		</button>
+		<div class="flex gap-3">
+			{#if auth.user.is_admin}
+				<a
+					href="/admin"
+					class="rounded bg-gray-100 px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
+				>
+					{$_('nav.admin')}
+				</a>
+			{/if}
+			<button
+				onclick={() => logout()}
+				class="rounded bg-primary px-4 py-2 text-white hover:bg-primary-dark"
+			>
+				{$_('dashboard.logout')}
+			</button>
+		</div>
 		<LangSwitcher />
 	</div>
 {/if}

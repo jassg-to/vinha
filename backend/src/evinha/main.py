@@ -1,8 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from evinha.admin.router import router as admin_router
 from evinha.auth.router import router as auth_router
 from evinha.config import settings
+from evinha.firebase import init_firebase
+
+init_firebase()
 
 app = FastAPI(title="e-Vinha API")
 
@@ -15,6 +19,7 @@ app.add_middleware(
 )
 
 app.include_router(auth_router)
+app.include_router(admin_router)
 
 
 @app.get("/health")

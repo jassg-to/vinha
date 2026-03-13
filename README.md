@@ -5,8 +5,9 @@ Spiritist Centre operations management web app built for [Joanna de Angelis Spir
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/) 22+
-- [Python](https://python.org/) 3.12+
+- [Python](https://python.org/) 3.14+
 - [uv](https://docs.astral.sh/uv/) (Python package manager)
+- A [Firebase](https://firebase.google.com/) project with Firestore enabled (Native mode)
 
 ## Setup
 
@@ -18,14 +19,16 @@ Spiritist Centre operations management web app built for [Joanna de Angelis Spir
 
 2. Fill in your Google OAuth credentials and a random JWT secret in `.env`.
 
-3. Install dependencies:
+3. Download a Firebase service account key from the Firebase console (Project Settings > Service Accounts > Generate New Private Key) and save it as `backend/service-account.json`. This file is gitignored.
+
+4. Install dependencies:
 
    ```bash
    cd backend && uv sync
    cd frontend && npm install
    ```
 
-4. Run both dev servers (stops both on Ctrl+C):
+5. Run both dev servers (stops both on Ctrl+C):
 
    ```powershell
    .\dev.ps1
@@ -41,7 +44,13 @@ Spiritist Centre operations management web app built for [Joanna de Angelis Spir
    cd frontend && npm run dev
    ```
 
-5. Open http://localhost:5173 in your browser.
+6. Open http://localhost:5173 in your browser. The first user to log in automatically becomes admin.
+
+## Permissions
+
+Users are stored in Firestore. Each user has an admin flag and per-section role assignments. The four sections are: **Library**, **Book Store**, **Fundraisers**, and **Bookings**. Each section supports three role tiers: **Viewer** (read-only), **Editor** (create/modify/delete), and **Manager** (full control). Admins bypass all section checks.
+
+Admins can manage users and assign permissions at `/admin`.
 
 ## Internationalization
 

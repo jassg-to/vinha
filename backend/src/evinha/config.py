@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     JWT_SECRET: str = "dev-secret-change-me"
     FRONTEND_URL: str = "http://localhost:5173"
     BACKEND_URL: str = "http://localhost:8080"
+    FIREBASE_SERVICE_ACCOUNT: str = "service-account.json"
 
 
 settings = Settings()
