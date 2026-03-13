@@ -26,4 +26,6 @@ cd frontend && npm run dev
 - **Backend deps**: Managed by `uv` via `pyproject.toml`. Never use pip or requirements.txt directly.
 - **All backend endpoints are async.**
 - **Auth**: JWT tokens stored in httpOnly cookies. Never use localStorage for auth tokens.
+- **i18n**: Uses `svelte-i18n`. Translations live in `frontend/src/lib/i18n/{locale}.json`. Wrap all user-facing strings with `$_('key')`. Browser locale is auto-detected; en-CA is the fallback.
+    - For Portuguese, do not use gender-hedged structures, just reword to take user gender out of the sentence, e.g. "Boas vindas" instead of "Bem vindo(a)" or "Escrito por" instead of "Autor(a)".
 - **License**: AGPL-3.0. The login page includes a link to the source code for compliance.

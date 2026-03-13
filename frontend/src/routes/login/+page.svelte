@@ -1,6 +1,8 @@
 <script lang="ts">
+	import { _ } from 'svelte-i18n';
 	import { getAuth } from '$lib/auth.svelte';
 	import { goto } from '$app/navigation';
+	import LangSwitcher from '$lib/components/LangSwitcher.svelte';
 
 	const auth = getAuth();
 	const repoUrl: string = __REPO_URL__;
@@ -14,8 +16,8 @@
 
 <div class="flex min-h-screen flex-col items-center justify-center gap-8">
 	<div class="text-center">
-		<h1 class="text-4xl font-bold text-primary">e-Vinha</h1>
-		<p class="mt-2 text-gray-600">Spiritist Centre</p>
+		<h1 class="text-4xl font-bold text-primary">{$_('app.title')}</h1>
+		<p class="mt-2 text-gray-600">{$_('app.subtitle')}</p>
 	</div>
 
 	<a
@@ -40,12 +42,14 @@
 				fill="#EA4335"
 			/>
 		</svg>
-		<span class="text-sm font-medium text-gray-700">Sign in with Google</span>
+		<span class="text-sm font-medium text-gray-700">{$_('login.google')}</span>
 	</a>
 
 	<footer class="mt-4 flex gap-3 text-sm text-gray-400">
 		<a href={repoUrl} target="_blank" rel="noopener noreferrer" class="underline hover:text-gray-600">
-			Source code (AGPL-3.0)
+			{$_('login.source')}
 		</a>
+		<span class="text-gray-300">·</span>
+		<LangSwitcher />
 	</footer>
 </div>

@@ -1,0 +1,11 @@
+{
+	"app.title": "e-Vinha",
+	"app.subtitle": "Centro Espírita",
+	"login.google": "Entrar com Google",
+	"login.source": "Código-fonte (AGPL-3.0)",
+	"dashboard.loading": "Carregando…",
+	"dashboard.welcome": "Boas vindas, {name}",
+	"dashboard.logout": "Sair",
+	"lang.en-CA": "English",
+	"lang.pt-BR": "Português"
+}

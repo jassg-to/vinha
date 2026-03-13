@@ -36,6 +36,10 @@ Spiritist Centre operations management web app built for [Joanna de Angelis Spir
 
 5. Open http://localhost:5173 in your browser.
 
+## Internationalization
+
+The UI supports English (en-CA) and Portuguese (pt-BR). The language is auto-detected from your browser settings and can be toggled manually via the language switcher. Translation files are in `frontend/src/lib/i18n/`.
+
 ## License
 
 [Affero General Public License 3.0](LICENSE)

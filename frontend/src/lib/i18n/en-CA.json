@@ -1,0 +1,11 @@
+{
+	"app.title": "e-Vinha",
+	"app.subtitle": "Spiritist Centre",
+	"login.google": "Sign in with Google",
+	"login.source": "Source code (AGPL-3.0)",
+	"dashboard.loading": "Loading…",
+	"dashboard.welcome": "Welcome, {name}",
+	"dashboard.logout": "Logout",
+	"lang.en-CA": "English",
+	"lang.pt-BR": "Português"
+}
