@@ -1,0 +1,47 @@
+import { api } from './api';
+
+interface User {
+	email: string;
+	name: string;
+	picture: string;
+}
+
+let user = $state<User | null>(null);
+let loading = $state(true);
+let checked = $state(false);
+
+export function getAuth() {
+	return {
+		get user() {
+			return user;
+		},
+		get loading() {
+			return loading;
+		},
+		get checked() {
+			return checked;
+		}
+	};
+}
+
+export async function checkAuth(): Promise<void> {
+	try {
+		const res = await fetch('http://localhost:8080/auth/me', { credentials: 'include' });
+		if (res.ok) {
+			user = await res.json();
+		} else {
+			user = null;
+		}
+	} catch {
+		user = null;
+	} finally {
+		loading = false;
+		checked = true;
+	}
+}
+
+export async function logout(): Promise<void> {
+	await api.post('/auth/logout');
+	user = null;
+	window.location.href = '/login';
+}
