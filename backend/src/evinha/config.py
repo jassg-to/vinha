@@ -9,11 +9,8 @@ class Settings(BaseSettings):
         env_file_encoding="utf-8",
     )
 
-    GOOGLE_CLIENT_ID: str
-    GOOGLE_CLIENT_SECRET: str
     JWT_SECRET: str = "dev-secret-change-me"
     FRONTEND_URL: str = "http://localhost:5173"
-    BACKEND_URL: str = "http://localhost:8080"
     FIREBASE_SERVICE_ACCOUNT: str = "service-account.json"
 
 

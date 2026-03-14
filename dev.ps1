@@ -2,7 +2,7 @@
 # Press Ctrl+C to stop both.
 
 $backend = Start-Process -NoNewWindow -PassThru -FilePath "uv" `
-    -ArgumentList "run", "uvicorn", "evinha.main:app", "--port", "8080", "--reload" `
+    -ArgumentList "run", "-m", "uvicorn", "evinha.main:app", "--port", "8080", "--reload" `
     -WorkingDirectory "$PSScriptRoot\backend"
 
 $frontend = Start-Process -NoNewWindow -PassThru -FilePath "cmd.exe" `

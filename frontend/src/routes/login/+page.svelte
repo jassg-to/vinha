@@ -1,28 +1,56 @@
 <script lang="ts">
-	import { _ } from 'svelte-i18n';
-	import { getAuth } from '$lib/auth.svelte';
-	import { goto } from '$app/navigation';
-	import LangSwitcher from '$lib/components/LangSwitcher.svelte';
+	import { _ } from "svelte-i18n";
+	import { getAuth, checkAuth } from "$lib/auth.svelte";
+	import { goto } from "$app/navigation";
+	import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+	import { firebaseAuth } from "$lib/firebase";
+	import { api } from "$lib/api";
+	import LangSwitcher from "$lib/components/LangSwitcher.svelte";
 
 	const auth = getAuth();
 	const repoUrl: string = __REPO_URL__;
+	let error = $state("");
+	let signingIn = $state(false);
 
 	$effect(() => {
 		if (auth.checked && auth.user) {
-			goto('/');
+			goto("/");
 		}
 	});
+
+	async function loginWithGoogle() {
+		error = "";
+		signingIn = true;
+		try {
+			const result = await signInWithPopup(firebaseAuth, new GoogleAuthProvider());
+			const idToken = await result.user.getIdToken();
+			const res = await api.post("/auth/firebase", { id_token: idToken });
+			if (!res.ok) {
+				error = "Login failed";
+				return;
+			}
+			await checkAuth();
+			goto("/");
+		} catch (e: any) {
+			if (e.code !== "auth/popup-closed-by-user") {
+				error = e.message || "Login failed";
+			}
+		} finally {
+			signingIn = false;
+		}
+	}
 </script>
 
 <div class="flex min-h-screen flex-col items-center justify-center gap-8">
 	<div class="text-center">
-		<h1 class="text-4xl font-bold text-primary">{$_('app.title')}</h1>
-		<p class="mt-2 text-gray-600">{$_('app.subtitle')}</p>
+		<h1 class="text-4xl font-bold text-primary">{$_("app.title")}</h1>
+		<p class="mt-2 text-gray-600">{$_("app.subtitle")}</p>
 	</div>
 
-	<a
-		href="http://localhost:8080/auth/google"
-		class="flex items-center gap-3 rounded-lg border border-gray-300 bg-white px-6 py-3 shadow transition-shadow hover:shadow-md"
+	<button
+		onclick={loginWithGoogle}
+		disabled={signingIn}
+		class="flex items-center gap-3 rounded-lg border border-gray-300 bg-white px-6 py-3 shadow transition-shadow hover:shadow-md disabled:opacity-50"
 	>
 		<svg class="h-5 w-5" viewBox="0 0 24 24">
 			<path
@@ -42,12 +70,23 @@
 				fill="#EA4335"
 			/>
 		</svg>
-		<span class="text-sm font-medium text-gray-700">{$_('login.google')}</span>
-	</a>
+		<span class="text-sm font-medium text-gray-700"
+			>{$_("login.google")}</span
+		>
+	</button>
+
+	{#if error}
+		<p class="text-sm text-red-500">{error}</p>
+	{/if}
 
 	<footer class="mt-4 flex gap-3 text-sm text-gray-400">
-		<a href={repoUrl} target="_blank" rel="noopener noreferrer" class="underline hover:text-gray-600">
-			{$_('login.source')}
+		<a
+			href={repoUrl}
+			target="_blank"
+			rel="noopener noreferrer"
+			class="underline hover:text-gray-600"
+		>
+			{$_("login.source")}
 		</a>
 		<span class="text-gray-300">·</span>
 		<LangSwitcher />

@@ -21,7 +21,7 @@ Or individually:
 
 ```bash
 # Backend (port 8080)
-cd backend && uv run uvicorn evinha.main:app --port 8080 --reload
+cd backend && uv run -m uvicorn evinha.main:app --port 8080 --reload
 
 # Frontend (port 5173)
 cd frontend && npm run dev
@@ -33,7 +33,7 @@ cd frontend && npm run dev
 - **Tailwind CSS v4**: CSS-native config via `@import "tailwindcss"` and `@theme` in `app.css`. No `tailwind.config.js`.
 - **Backend deps**: Managed by `uv` via `pyproject.toml`. Never use pip or requirements.txt directly.
 - **All backend endpoints are async.**
-- **Auth**: JWT tokens stored in httpOnly cookies. Never use localStorage for auth tokens.
+- **Auth**: Firebase Auth SDK on the frontend (Google sign-in via popup), verified on the backend with `firebase_admin.auth.verify_id_token()`. Session managed via custom JWT in httpOnly cookies. Never use localStorage for auth tokens. Do not use `signInWithRedirect` — it is broken on localhost due to third-party storage partitioning.
 - **Database**: Firestore via Firebase Admin SDK (backend only). All Firestore access goes through the FastAPI API — never from the frontend directly. Service account key lives at `backend/service-account.json` (gitignored).
 - **Permissions**: Admin flag + per-section roles. Sections: `library`, `book_store`, `fundraisers`, `bookings`. Roles per section: `viewer`, `editor`, `manager` (ordered by privilege). Use `require_admin` or `require_section(section, min_role)` dependencies from `evinha.auth.dependencies` to protect endpoints. Admins bypass all section checks.
 - **User data**: Stored in Firestore `users` collection, keyed by email. Upserted on every login. Permissions are embedded in the JWT and take effect on next login after an admin changes them.

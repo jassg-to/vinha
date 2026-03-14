@@ -1,28 +1,29 @@
-from fastapi import APIRouter, Cookie, Response
-from fastapi.responses import RedirectResponse
+from fastapi import APIRouter, Cookie, HTTPException, Response
+from firebase_admin import auth as firebase_auth
+from pydantic import BaseModel
 
-from evinha.config import settings
 from evinha.users.repository import upsert_user_on_login
 
-from .google import exchange_code, get_authorization_url
 from .jwt import COOKIE_NAME, clear_auth_cookie, create_token, decode_token, set_auth_cookie
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
-@router.get("/google")
-async def login_google() -> RedirectResponse:
-    url = get_authorization_url()
-    return RedirectResponse(url)
+class FirebaseLoginRequest(BaseModel):
+    id_token: str
 
 
-@router.get("/callback")
-async def auth_callback(code: str) -> RedirectResponse:
-    user_info = await exchange_code(code)
+@router.post("/firebase")
+async def login_firebase(body: FirebaseLoginRequest) -> Response:
+    try:
+        decoded = firebase_auth.verify_id_token(body.id_token)
+    except Exception:
+        raise HTTPException(status_code=401, detail="Invalid Firebase token")
+
     user_record = await upsert_user_on_login(
-        email=user_info["email"],
-        name=user_info["name"],
-        picture=user_info["picture"],
+        email=decoded["email"],
+        name=decoded.get("name", ""),
+        picture=decoded.get("picture", ""),
     )
     token = create_token({
         "email": user_record["email"],
@@ -31,7 +32,7 @@ async def auth_callback(code: str) -> RedirectResponse:
         "is_admin": user_record["is_admin"],
         "sections": user_record["sections"],
     })
-    response = RedirectResponse(url=settings.FRONTEND_URL, status_code=302)
+    response = Response(status_code=200)
     set_auth_cookie(response, token)
     return response
 
