@@ -28,7 +28,7 @@ export function getAuth() {
 
 export async function checkAuth(): Promise<void> {
 	try {
-		const res = await fetch('http://localhost:8080/auth/me', { credentials: 'include' });
+		const res = await api.get('/api/auth/me');
 		if (res.ok) {
 			user = await res.json();
 		} else {
@@ -43,7 +43,7 @@ export async function checkAuth(): Promise<void> {
 }
 
 export async function logout(): Promise<void> {
-	await api.post('/auth/logout');
+	await api.post('/api/auth/logout');
 	user = null;
 	window.location.href = '/login';
 }

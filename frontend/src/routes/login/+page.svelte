@@ -2,15 +2,47 @@
 	import { _ } from "svelte-i18n";
 	import { getAuth, checkAuth } from "$lib/auth.svelte";
 	import { goto } from "$app/navigation";
-	import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+	import {
+		GoogleAuthProvider,
+		signInWithPopup,
+		signInWithRedirect,
+		onAuthStateChanged,
+	} from "firebase/auth";
 	import { firebaseAuth } from "$lib/firebase";
 	import { api } from "$lib/api";
 	import LangSwitcher from "$lib/components/LangSwitcher.svelte";
+	import { onMount } from "svelte";
 
+	const isLocalhost = location.hostname === "localhost";
 	const auth = getAuth();
 	const repoUrl: string = __REPO_URL__;
 	let error = $state("");
 	let signingIn = $state(false);
+
+	// In production, handle the redirect result via onAuthStateChanged
+	if (!isLocalhost) {
+		onMount(() => {
+			const unsubscribe = onAuthStateChanged(firebaseAuth, async (fbUser) => {
+				if (!fbUser || auth.user) return;
+				signingIn = true;
+				try {
+					const idToken = await fbUser.getIdToken();
+					const res = await api.post("/api/auth/firebase", { id_token: idToken });
+					if (!res.ok) {
+						error = "Login failed";
+						return;
+					}
+					await checkAuth();
+					goto("/");
+				} catch (e: any) {
+					error = e.message || "Login failed";
+				} finally {
+					signingIn = false;
+				}
+			});
+			return unsubscribe;
+		});
+	}
 
 	$effect(() => {
 		if (auth.checked && auth.user) {
@@ -21,10 +53,14 @@
 	async function loginWithGoogle() {
 		error = "";
 		signingIn = true;
+		if (!isLocalhost) {
+			signInWithRedirect(firebaseAuth, new GoogleAuthProvider());
+			return;
+		}
 		try {
 			const result = await signInWithPopup(firebaseAuth, new GoogleAuthProvider());
 			const idToken = await result.user.getIdToken();
-			const res = await api.post("/auth/firebase", { id_token: idToken });
+			const res = await api.post("/api/auth/firebase", { id_token: idToken });
 			if (!res.ok) {
 				error = "Login failed";
 				return;

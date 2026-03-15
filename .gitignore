@@ -4,6 +4,7 @@ node_modules/
 __pycache__/
 *.pyc
 .venv/
+.firebaserc
 frontend/build/
 frontend/.svelte-kit/
 service-account.json

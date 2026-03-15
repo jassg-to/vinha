@@ -43,8 +43,8 @@
 
 	async function loadData() {
 		const [usersRes, sectionsRes] = await Promise.all([
-			api.get('/admin/users'),
-			api.get('/admin/sections')
+			api.get('/api/admin/users'),
+			api.get('/api/admin/sections')
 		]);
 		if (usersRes.ok) users = await usersRes.json();
 		if (sectionsRes.ok) sections = await sectionsRes.json();
@@ -55,7 +55,7 @@
 		feedback[user.email] = undefined!;
 		try {
 			const res = await api.patch(
-				`/admin/users/${encodeURIComponent(user.email)}/permissions`,
+				`/api/admin/users/${encodeURIComponent(user.email)}/permissions`,
 				{
 					is_admin: user.is_admin,
 					sections: user.sections
@@ -115,7 +115,7 @@
 		mergeBusy = true;
 		mergeFeedback = null;
 		try {
-			const res = await api.post('/admin/users/merge', {
+			const res = await api.post('/api/admin/users/merge', {
 				primary_email: mergePrimary,
 				secondary_email: mergeSecondary
 			});

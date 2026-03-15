@@ -4,7 +4,7 @@ from fastapi import Response
 import jwt
 from jwt.exceptions import PyJWTError
 
-from evinha.config import settings
+from evinha.config import IS_CLOUD, settings
 
 ALGORITHM = "HS256"
 COOKIE_NAME = "evinha_session"
@@ -32,7 +32,7 @@ def set_auth_cookie(response: Response, token: str) -> None:
         value=token,
         httponly=True,
         samesite="lax",
-        secure=False,  # Set True in production behind HTTPS
+        secure=IS_CLOUD,
         path="/",
         max_age=MAX_AGE,
     )

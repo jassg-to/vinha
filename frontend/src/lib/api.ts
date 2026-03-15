@@ -1,4 +1,4 @@
-const BASE = 'http://localhost:8080';
+const BASE = import.meta.env.DEV ? 'http://localhost:8080' : '';
 
 async function request(
 	path: string,

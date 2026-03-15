@@ -1,11 +1,14 @@
+import os
 from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+_env_path = Path(__file__).resolve().parents[3] / ".env"
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=str(Path(__file__).resolve().parents[3] / ".env"),
+        env_file=str(_env_path) if _env_path.exists() else None,
         env_file_encoding="utf-8",
     )
 
@@ -15,3 +18,5 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+
+IS_CLOUD = bool(os.environ.get("K_SERVICE"))
