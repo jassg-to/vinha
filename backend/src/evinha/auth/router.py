@@ -42,10 +42,10 @@ async def get_current_user(
     evinha_session: str | None = Cookie(default=None, alias=COOKIE_NAME),
 ) -> dict:
     if not evinha_session:
-        return Response(status_code=401)
+        raise HTTPException(status_code=401, detail="Not authenticated")
     payload = decode_token(evinha_session)
     if not payload:
-        return Response(status_code=401)
+        raise HTTPException(status_code=401, detail="Invalid token")
     return {
         "email": payload["email"],
         "name": payload["name"],

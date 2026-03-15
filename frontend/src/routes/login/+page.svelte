@@ -6,7 +6,7 @@
 		GoogleAuthProvider,
 		signInWithPopup,
 		signInWithRedirect,
-		onAuthStateChanged,
+		getRedirectResult,
 	} from "firebase/auth";
 	import { firebaseAuth } from "$lib/firebase";
 	import { api } from "$lib/api";
@@ -17,30 +17,33 @@
 	const auth = getAuth();
 	const repoUrl: string = __REPO_URL__;
 	let error = $state("");
-	let signingIn = $state(false);
+	let signingIn = $state(!isLocalhost); // true in prod until redirect result is checked
 
-	// In production, handle the redirect result via onAuthStateChanged
+	async function exchangeToken(idToken: string): Promise<boolean> {
+		const res = await api.post("/api/auth/firebase", { id_token: idToken });
+		if (!res.ok) {
+			error = "Login failed";
+			return false;
+		}
+		await checkAuth();
+		goto("/");
+		return true;
+	}
+
+	// Handle redirect result after returning from Firebase sign-in
 	if (!isLocalhost) {
-		onMount(() => {
-			const unsubscribe = onAuthStateChanged(firebaseAuth, async (fbUser) => {
-				if (!fbUser || auth.user) return;
+		onMount(async () => {
+			try {
+				const result = await getRedirectResult(firebaseAuth);
+				if (!result) return;
 				signingIn = true;
-				try {
-					const idToken = await fbUser.getIdToken();
-					const res = await api.post("/api/auth/firebase", { id_token: idToken });
-					if (!res.ok) {
-						error = "Login failed";
-						return;
-					}
-					await checkAuth();
-					goto("/");
-				} catch (e: any) {
-					error = e.message || "Login failed";
-				} finally {
-					signingIn = false;
-				}
-			});
-			return unsubscribe;
+				const idToken = await result.user.getIdToken();
+				await exchangeToken(idToken);
+			} catch (e: any) {
+				error = e.message || "Login failed";
+			} finally {
+				signingIn = false;
+			}
 		});
 	}
 
@@ -60,13 +63,7 @@
 		try {
 			const result = await signInWithPopup(firebaseAuth, new GoogleAuthProvider());
 			const idToken = await result.user.getIdToken();
-			const res = await api.post("/api/auth/firebase", { id_token: idToken });
-			if (!res.ok) {
-				error = "Login failed";
-				return;
-			}
-			await checkAuth();
-			goto("/");
+			await exchangeToken(idToken);
 		} catch (e: any) {
 			if (e.code !== "auth/popup-closed-by-user") {
 				error = e.message || "Login failed";

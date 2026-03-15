@@ -1,3 +1,5 @@
+import { signOut } from 'firebase/auth';
+import { firebaseAuth } from './firebase';
 import { api } from './api';
 
 interface User {
@@ -44,6 +46,7 @@ export async function checkAuth(): Promise<void> {
 
 export async function logout(): Promise<void> {
 	await api.post('/api/auth/logout');
+	await signOut(firebaseAuth);
 	user = null;
 	window.location.href = '/login';
 }

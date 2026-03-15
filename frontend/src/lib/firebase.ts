@@ -3,7 +3,7 @@ import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
 	apiKey: 'AIzaSyAgmrIxSjoPNrQjjF61hSb9Y6KbGIis39k',
-	authDomain: 'e-vinha-test.web.app',
+	authDomain: 'e-vinha-test.firebaseapp.com',
 	projectId: 'e-vinha-test'
 };
 
