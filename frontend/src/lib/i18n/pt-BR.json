@@ -30,8 +30,8 @@
 	"admin.back": "Voltar ao painel",
 	"admin.merge": "Mesclar contas",
 	"admin.merge.description": "Mesclar uma conta secundária em uma conta principal. A conta secundária será removida e seu email será vinculado à principal.",
-	"admin.merge.primary": "Manter esta conta",
-	"admin.merge.secondary": "Mesclar esta conta",
+	"admin.merge.primary": "Conta principal",
+	"admin.merge.secondary": "Conta secundária",
 	"admin.merge.submit": "Mesclar",
 	"admin.merge.success": "Contas mescladas com sucesso",
 	"admin.merge.cancel": "Cancelar"

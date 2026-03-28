@@ -40,3 +40,11 @@ cd frontend && npm run dev
 - **i18n**: Uses `svelte-i18n`. Translations live in `frontend/src/lib/i18n/{locale}.json`. Wrap all user-facing strings with `$_('key')`. Browser locale is auto-detected; en-CA is the fallback.
     - For Portuguese, do not use gender-hedged structures, just reword to take user gender out of the sentence, e.g. "Boas vindas" instead of "Bem vindo(a)" or "Escrito por" instead of "Autor(a)".
 - **License**: AGPL-3.0. The login page includes a link to the source code for compliance.
+
+## Browser Automation
+
+A Firefox DevTools MCP server is configured for this project (`firefox-devtools`). It allows interacting with a live Firefox browser — navigating pages, clicking elements, taking screenshots, inspecting the console, reading network requests, and running JavaScript.
+
+- Add it with: `claude mcp add firefox-devtools npx @padenot/firefox-devtools-mcp`
+- Frontend dev server runs at `http://localhost:5173`
+- Use `take_snapshot` to get element UIDs before clicking/filling

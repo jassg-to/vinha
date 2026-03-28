@@ -17,8 +17,8 @@ class FirebaseLoginRequest(BaseModel):
 async def login_firebase(body: FirebaseLoginRequest) -> Response:
     try:
         decoded = firebase_auth.verify_id_token(body.id_token)
-    except Exception:
-        raise HTTPException(status_code=401, detail="Invalid Firebase token")
+    except Exception as e:
+        raise HTTPException(status_code=401, detail=f"Invalid Firebase token: {type(e).__name__}: {e}")
 
     user_record = await upsert_user_on_login(
         email=decoded["email"],

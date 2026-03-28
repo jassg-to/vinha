@@ -17,7 +17,7 @@ Spiritist Centre operations management web app built for [Joanna de Angelis Spir
    cp .env.example .env
    ```
 
-2. Fill in your Google OAuth credentials and a random JWT secret in `.env`.
+2. Fill in a random JWT secret and your frontend URL in `.env`.
 
 3. Download a Firebase service account key from the Firebase console (Project Settings > Service Accounts > Generate New Private Key) and save it as `backend/service-account.json`. This file is gitignored.
 
