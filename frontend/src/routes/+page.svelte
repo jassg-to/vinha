@@ -29,6 +29,14 @@
 		<h1 class="text-2xl font-bold">{$_('dashboard.welcome', { values: { name: auth.user.name } })}</h1>
 		<p class="text-gray-600">{auth.user.email}</p>
 		<div class="flex gap-3">
+			{#if auth.user.is_admin || auth.user.sections?.fundraisers}
+				<a
+					href="/fundraisers"
+					class="rounded bg-gray-100 px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
+				>
+					{$_('nav.fundraisers')}
+				</a>
+			{/if}
 			{#if auth.user.is_admin}
 				<a
 					href="/admin"

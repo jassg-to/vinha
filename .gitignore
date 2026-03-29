@@ -6,5 +6,6 @@ __pycache__/
 .venv/
 .firebaserc
 frontend/build/
+frontend/coverage/
 frontend/.svelte-kit/
 service-account.json

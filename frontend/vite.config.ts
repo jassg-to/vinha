@@ -2,6 +2,7 @@ import { execSync } from 'child_process';
 import tailwindcss from '@tailwindcss/vite';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
+import istanbul from 'vite-plugin-istanbul';
 
 function getRepoUrl(): string {
 	try {
@@ -19,8 +20,38 @@ function getRepoUrl(): string {
 }
 
 export default defineConfig({
-	plugins: [tailwindcss(), sveltekit()],
+	plugins: [
+		tailwindcss(),
+		sveltekit(),
+		...(process.env.E2E_COVERAGE
+			? [
+					istanbul({
+						include: 'src/**/*',
+						exclude: ['node_modules', 'src/tests/**', 'e2e/**'],
+						requireEnv: false,
+						checkProd: false
+					})
+				]
+			: [])
+	],
 	define: {
 		__REPO_URL__: JSON.stringify(getRepoUrl())
+	},
+	resolve: process.env.VITEST
+		? { conditions: ['browser'] }
+		: undefined,
+	test: {
+		environment: 'jsdom',
+		setupFiles: ['./src/tests/setup.ts'],
+		include: ['src/**/*.test.ts'],
+		alias: {
+			$lib: new URL('./src/lib', import.meta.url).pathname
+		},
+		coverage: {
+			include: ['src/lib/**', 'src/routes/**'],
+			exclude: ['src/tests/**'],
+			reporter: ['json', 'text'],
+			reportsDirectory: 'coverage/unit'
+		}
 	}
 });
