@@ -1,11 +1,12 @@
 .env
 .claude/
+.coverage
 node_modules/
 __pycache__/
 *.pyc
 .venv/
 .firebaserc
+coverage/
 frontend/build/
-frontend/coverage/
 frontend/.svelte-kit/
 service-account.json
