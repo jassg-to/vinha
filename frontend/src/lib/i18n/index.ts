@@ -10,17 +10,17 @@ function detectLocale(): string {
 	const saved = localStorage.getItem(LOCALE_KEY);
 	if (saved && SUPPORTED.includes(saved)) return saved;
 
-	const nav = getLocaleFromNavigator() ?? 'en-CA';
+	const nav = getLocaleFromNavigator() ?? 'pt-BR';
 	return (
 		SUPPORTED.find((l) => nav === l) ??
 		SUPPORTED.find((l) => nav.startsWith(l.split('-')[0])) ??
-		'en-CA'
+		'pt-BR'
 	);
 }
 
 export function initI18n() {
 	init({
-		fallbackLocale: 'en-CA',
+		fallbackLocale: 'pt-BR',
 		initialLocale: detectLocale()
 	});
 

@@ -26,7 +26,7 @@ describe('detectLocale', () => {
 		);
 	});
 
-	it('falls back to en-CA when navigator locale is unsupported', async () => {
+	it('falls back to pt-BR when navigator locale is unsupported', async () => {
 		vi.doMock('svelte-i18n', () => ({
 			register: vi.fn(),
 			init: vi.fn(),
@@ -39,7 +39,7 @@ describe('detectLocale', () => {
 		initI18n();
 
 		expect(init).toHaveBeenCalledWith(
-			expect.objectContaining({ initialLocale: 'en-CA' })
+			expect.objectContaining({ initialLocale: 'pt-BR' })
 		);
 	});
 

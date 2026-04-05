@@ -1,50 +1,50 @@
-# e-Vinha — Spiritist Centre Operations
+# e-Vinha — Operações de Centro Espírita
 
-## Project Layout
+## Estrutura do Projeto
 
-Monorepo with a SvelteKit frontend and a FastAPI backend.
+Monorepo com frontend SvelteKit e backend FastAPI.
 
 ```
-frontend/   — SvelteKit SPA (Svelte 5, Tailwind v4, adapter-static)
-backend/    — FastAPI async API (Python, uv-managed)
+frontend/   — SPA SvelteKit (Svelte 5, Tailwind v4, adapter-static)
+backend/    — API async FastAPI (Python, gerenciado com uv)
 ```
 
-## Running Dev Servers
+## Servidores de Desenvolvimento
 
-Both servers at once (stops both on Ctrl+C):
+Ambos de uma vez (para com Ctrl+C):
 
 ```powershell
 .\dev.ps1
 ```
 
-Or individually:
+Ou individualmente:
 
 ```bash
-# Backend (port 8080)
+# Backend (porta 8080)
 cd backend && uv run -m uvicorn evinha.main:app --port 8080 --reload
 
-# Frontend (port 5173)
+# Frontend (porta 5173)
 cd frontend && npm run dev
 ```
 
-## Key Conventions
+## Convenções Principais
 
-- **Svelte 5 runes only**: Use `$state`, `$derived`, `$effect`. Never use the old `$:` reactive syntax.
-- **Tailwind CSS v4**: CSS-native config via `@import "tailwindcss"` and `@theme` in `app.css`. No `tailwind.config.js`.
-- **Backend deps**: Managed by `uv` via `pyproject.toml`. Never use pip or requirements.txt directly.
-- **All backend endpoints are async.**
-- **Auth**: Firebase Auth SDK on the frontend (Google sign-in), verified on the backend with `firebase_admin.auth.verify_id_token()`. Session managed via custom JWT in httpOnly cookies. Never use localStorage for auth tokens. Sign-in uses `signInWithRedirect` in production and `signInWithPopup` on localhost (redirect is broken on localhost due to browser third-party storage partitioning).
-- **Database**: Firestore via Firebase Admin SDK (backend only). All Firestore access goes through the FastAPI API — never from the frontend directly. Service account key lives at `backend/service-account.json` (gitignored).
-- **Permissions**: Admin flag + per-section roles. Sections: `library`, `book_store`, `fundraisers`, `bookings`. Roles per section: `viewer`, `editor`, `manager` (ordered by privilege). Use `require_admin` or `require_section(section, min_role)` dependencies from `evinha.auth.dependencies` to protect endpoints. Admins bypass all section checks.
-- **User data**: Stored in Firestore `users` collection, keyed by email. Upserted on every login. Permissions are embedded in the JWT and take effect on next login after an admin changes them.
-- **i18n**: Uses `svelte-i18n`. Translations live in `frontend/src/lib/i18n/{locale}.json`. Wrap all user-facing strings with `$_('key')`. Browser locale is auto-detected; en-CA is the fallback.
-    - For Portuguese, do not use gender-hedged structures, just reword to take user gender out of the sentence, e.g. "Boas vindas" instead of "Bem vindo(a)" or "Escrito por" instead of "Autor(a)".
-- **License**: AGPL-3.0. The login page includes a link to the source code for compliance.
+- **Somente Svelte 5 runes**: Usar `$state`, `$derived`, `$effect`. Nunca usar a sintaxe reativa antiga `$:`.
+- **Tailwind CSS v4**: Configuração nativa em CSS via `@import "tailwindcss"` e `@theme` no `app.css`. Sem `tailwind.config.js`.
+- **Dependências do backend**: Gerenciadas pelo `uv` via `pyproject.toml`. Nunca usar pip ou requirements.txt diretamente.
+- **Todos os endpoints do backend são async.**
+- **Auth**: Firebase Auth SDK no frontend (login com Google), verificado no backend com `firebase_admin.auth.verify_id_token()`. Sessão gerenciada via JWT customizado em cookies httpOnly. Nunca usar localStorage para tokens de auth. Login usa `signInWithRedirect` em produção e `signInWithPopup` em localhost (redirect não funciona em localhost por causa do particionamento de storage de terceiros do navegador).
+- **Banco de dados**: Firestore via Firebase Admin SDK (somente backend). Todo acesso ao Firestore passa pela API FastAPI — nunca diretamente pelo frontend. A chave da service account fica em `backend/service-account.json` (no gitignore).
+- **Permissões**: Flag de admin + roles por seção. Seções: `library`, `book_store`, `fundraisers`, `bookings`. Roles por seção: `viewer`, `editor`, `manager` (em ordem de privilégio). Usar `require_admin` ou `require_section(section, min_role)` de `evinha.auth.dependencies` para proteger endpoints. Admins ignoram todas as verificações de seção.
+- **Dados de pessoas**: Armazenados na coleção `users` do Firestore, indexados por email. Upsert em cada login. Permissões são embutidas no JWT e entram em vigor no próximo login após um admin alterá-las.
+- **i18n**: Usa `svelte-i18n`. Traduções ficam em `frontend/src/lib/i18n/{locale}.json`. Envolver todas as strings visíveis com `$_('key')`. O locale do navegador é detectado automaticamente; pt-BR é o padrão.
+    - Para português, não usar estruturas com gênero definido, reformular para tirar o gênero da frase, ex: "Boas vindas" em vez de "Bem vindo(a)" ou "Escrito por" em vez de "Autor(a)".
+- **Licença**: AGPL-3.0. A página de login inclui um link para o código-fonte para conformidade.
 
-## Browser Automation
+## Automação de Navegador
 
-A Firefox DevTools MCP server is configured for this project (`firefox-devtools`). It allows interacting with a live Firefox browser — navigating pages, clicking elements, taking screenshots, inspecting the console, reading network requests, and running JavaScript.
+Um servidor MCP do Firefox DevTools está configurado para este projeto (`firefox-devtools`). Permite interagir com um navegador Firefox — navegar páginas, clicar elementos, tirar screenshots, inspecionar o console, ler requisições de rede e executar JavaScript.
 
-- Add it with: `claude mcp add firefox-devtools npx @padenot/firefox-devtools-mcp`
-- Frontend dev server runs at `http://localhost:5173`
-- Use `take_snapshot` to get element UIDs before clicking/filling
+- Adicionar com: `claude mcp add firefox-devtools npx @padenot/firefox-devtools-mcp`
+- Servidor de dev do frontend roda em `http://localhost:5173`
+- Usar `take_snapshot` para obter UIDs de elementos antes de clicar/preencher
