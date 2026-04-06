@@ -1,108 +1,108 @@
-# Fundraisers
+# Campanhas
 
-Fundraisers are recurring food events (e.g. monthly feijoada) where people order meals for dine-in or take-out. The system handles the full lifecycle: setting up the event and menu, taking orders, collecting payments, and managing the day-of operations (check-in, kitchen prep, cashier).
+Campanhas são eventos recorrentes de alimentação (ex: feijoada mensal) onde pessoas fazem pedidos para consumo no local ou para levar. O sistema gerencia o ciclo completo: configuração do evento e cardápio, recebimento de pedidos, registro de pagamentos e operações no dia do evento (check-in, cozinha, caixa).
 
-## Permissions
+## Permissões
 
-Access to fundraisers is controlled by section-based roles. Admins bypass all checks.
+O acesso às campanhas é controlado por roles de seção. Admins ignoram todas as verificações.
 
-| Role | Can do |
-|------|--------|
-| **Viewer** | See events, orders, and summaries (read-only) |
-| **Editor** | Everything a viewer can, plus: create/edit orders, record payments, check people in, edit the menu |
-| **Manager** | Everything an editor can, plus: create events, edit event details, change event status |
+| Role | Pode fazer |
+|------|------------|
+| **Leitura** | Ver eventos, pedidos e resumos (somente consulta) |
+| **Edição** | Tudo que Leitura pode, mais: criar/editar pedidos, registrar pagamentos, fazer check-in, editar o cardápio |
+| **Gestão** | Tudo que Edição pode, mais: criar eventos, editar detalhes do evento, alterar status do evento |
 
-## Event lifecycle
+## Ciclo de vida do evento
 
-Each event goes through four statuses:
+Cada evento passa por quatro status:
 
 ```
-Draft → Open → Day of Event → Closed
+Rascunho → Aberta → Dia do Evento → Encerrada
 ```
 
-Managers can advance or revert the status at any time from the event dashboard.
+Gestores podem avançar ou reverter o status a qualquer momento pelo painel do evento.
 
-- **Draft** — Setting up the event. Configure the name, date, description, and menu items. Orders can still be created in this phase.
-- **Open** — Reservations are open. This is the main phase where orders come in. Kitchen and Cashier views become available.
-- **Day of Event** — The event is happening. Staff use the Kitchen view to see what to prepare and the Cashier view to collect payments and check people in.
-- **Closed** — Event is over. The dashboard shows the final financial summary.
+- **Rascunho** — Configuração do evento. Definir nome, data, descrição e itens do cardápio. Pedidos já podem ser criados nesta fase.
+- **Aberta** — Reservas abertas. Esta é a fase principal onde os pedidos chegam. As visualizações de Cozinha e Caixa ficam disponíveis.
+- **Dia do Evento** — O evento está acontecendo. A equipe usa a Cozinha para ver o que preparar e o Caixa para receber pagamentos e fazer check-in.
+- **Encerrada** — Evento finalizado. O painel mostra o resumo financeiro final.
 
-## Setting up an event
+## Configurando um evento
 
-1. Go to **Fundraisers** from the dashboard.
-2. Click **New Event**, enter a name and date, then click **Create Event**.
-3. You'll land on the **Edit Event** page. Fill in:
-   - **Event details** — Name, date, and an optional description.
-   - **Menu items** — Each item has a name, a category (Meal, Drink, Dessert, Other), and one or more **variants**. Variants let you offer the same item in different formats at different prices. For example, "Feijoada Tradicional" might have a "Regular" variant at $25 and a "Pote" (container) variant at $18. Items with no meaningful variant use a single "default" variant.
-4. Click **Save Menu** to persist the menu.
+1. Acesse **Campanhas** no painel.
+2. Clique em **Nova Campanha**, insira nome e data, depois clique em **Criar Campanha**.
+3. Você será direcionado à página de **Editar Campanha**. Preencha:
+   - **Detalhes do evento** — Nome, data e descrição opcional.
+   - **Itens do cardápio** — Cada item tem um nome, uma categoria (Refeição, Bebida, Sobremesa, Outro) e uma ou mais **variantes**. Variantes permitem oferecer o mesmo item em formatos diferentes com preços diferentes. Por exemplo, "Feijoada Tradicional" pode ter uma variante "Regular" a $25 e uma variante "Pote" a $18. Itens sem variante significativa usam uma única variante "padrão".
+4. Clique em **Salvar Cardápio** para salvar.
 
-Editors can update the menu at any time (useful for day-of additions like donated desserts).
+Editores podem atualizar o cardápio a qualquer momento (útil para adições no dia, como sobremesas doadas).
 
-## Taking orders
+## Fazendo pedidos
 
-1. From the event dashboard, click **New Order**.
-2. **Customer** — Start typing a name. If the person has ordered before, they'll appear in the dropdown (select to auto-fill name and phone). Otherwise, type the name and phone manually; a new person record is created automatically.
-3. **Type** — Choose Dine-in or To-go.
-4. **Status** — Choose Confirmed (default) or Inquiring. Use Inquiring when a conversation is still ongoing but you want to jot down the details so far.
-5. **Items** — Use the +/- buttons to set quantities for each menu item variant. The running total updates live.
-6. **Notes** — Optional free-text (e.g. "extra hot", "allergic to peanuts").
-7. Click **Save Order**.
+1. No painel do evento, clique em **Novo Pedido**.
+2. **Cliente** — Comece a digitar um nome. Se a pessoa já fez pedidos antes, aparecerá no dropdown (selecione para preencher nome e telefone automaticamente). Caso contrário, digite nome e telefone manualmente; um novo registro de pessoa é criado automaticamente.
+3. **Tipo** — Escolha No local ou Para levar.
+4. **Status** — Escolha Confirmado (padrão) ou Em consulta. Use Em consulta quando a conversa ainda está em andamento mas você quer anotar os detalhes até o momento.
+5. **Itens** — Use os botões +/- para definir quantidades de cada variante do cardápio. O total atualiza em tempo real.
+6. **Observações** — Texto livre opcional (ex: "bem apimentado", "alergia a amendoim").
+7. Clique em **Salvar Pedido**.
 
-### Order statuses
+### Status dos pedidos
 
-| Status | Meaning |
-|--------|---------|
-| **Inquiring** | Conversation in progress, details may be incomplete. Not counted in kitchen totals. |
-| **Confirmed** | Order is locked in. Counted in kitchen totals. |
-| **Checked in** | Customer has arrived at the event. |
-| **No show** | Customer did not show up. |
-| **Cancelled** | Order was cancelled. |
+| Status | Significado |
+|--------|-------------|
+| **Em consulta** | Conversa em andamento, detalhes podem estar incompletos. Não contabilizado nos totais da cozinha. |
+| **Confirmado** | Pedido confirmado. Contabilizado nos totais da cozinha. |
+| **Presente** | Cliente chegou ao evento. |
+| **Não compareceu** | Cliente não apareceu. |
+| **Cancelado** | Pedido foi cancelado. |
 
-Status can be changed from the order detail page using the action buttons (Confirm, Check in, No show, Cancel).
+O status pode ser alterado na página de detalhe do pedido usando os botões de ação (Confirmar, Registrar presença, Não compareceu, Cancelar).
 
-## Payments
+## Pagamentos
 
-Payments are recorded from the **order detail page**. The payment section shows:
+Pagamentos são registrados na **página de detalhe do pedido**. A seção de pagamento mostra:
 
-- The total amount paid so far and the outstanding balance.
-- A list of recorded payments with method, amount, who recorded it, and a Remove link.
-- A form to add a new payment: enter the amount (pre-filled with the remaining balance) and select a method (Cash, Square, E-transfer, or Donation).
+- O total pago até o momento e o saldo pendente.
+- Uma lista de pagamentos registrados com forma, valor, quem registrou e um link para Remover.
+- Um formulário para adicionar novo pagamento: insira o valor (pré-preenchido com o saldo restante) e selecione a forma (Dinheiro, Square, E-transfer ou Doação).
 
-Partial payments are supported — record as many payments as needed until the balance reaches zero.
+Pagamentos parciais são suportados — registre quantos pagamentos forem necessários até o saldo zerar.
 
-## Day-of views
+## Visualizações do dia do evento
 
-These are optimized for phones and tablets used by staff during the event. Both auto-refresh every 30 seconds.
+Otimizadas para celulares e tablets usados pela equipe durante o evento. Ambas atualizam automaticamente a cada 30 segundos.
 
-### Kitchen
+### Cozinha
 
-Shows large cards for each menu item variant with counts split by **Dine-in**, **To-go**, and **Total**. Only counts orders with status Confirmed or Checked in (excludes Inquiring, Cancelled, and No show).
+Mostra cards grandes para cada variante do cardápio com contagens divididas por **No local**, **Para levar** e **Total**. Só conta pedidos com status Confirmado ou Presente (exclui Em consulta, Cancelado e Não compareceu).
 
-Access: anyone with at least Viewer access.
+Acesso: qualquer pessoa com pelo menos acesso de Leitura.
 
-### Cashier
+### Caixa
 
-Shows all active orders (excludes cancelled, no-show, and inquiring) in a card layout. Each card shows:
+Mostra todos os pedidos ativos (exclui cancelados, não compareceu e em consulta) em layout de cards. Cada card mostra:
 
-- Customer name, status badge, order type
-- Items summary
-- Total, amount paid, and outstanding balance
-- **Check in** button (if not yet checked in)
-- **Quick-pay buttons** — one-tap buttons for Cash, Square, and E-transfer that pay the full remaining balance in one click. For partial payments or other methods, tap the arrow (→) to go to the full order detail page.
+- Nome, badge de status, tipo do pedido
+- Resumo dos itens
+- Total, valor pago e saldo pendente
+- Botão de **Registrar presença** (se ainda não registrado)
+- **Botões de pagamento rápido** — botões de um toque para Dinheiro, Square e E-transfer que pagam o saldo total restante em um clique. Para pagamentos parciais ou outros métodos, toque na seta (→) para ir à página completa do pedido.
 
-Access: Editors and above.
+Acesso: Edição e acima.
 
-## Event dashboard
+## Painel do evento
 
-The event dashboard (`/fundraisers/{eventId}`) is the main hub. It shows:
+O painel do evento (`/fundraisers/{eventId}`) é o hub principal. Mostra:
 
-- **Summary cards** — Total orders, total meals, revenue, amount paid, and outstanding balance.
-- **Filters** — Filter the order list by status, type (dine-in/to-go), and payment status (paid/unpaid).
-- **Order table** — Shows customer name, phone, type, items, total, paid amount, and status. Click any row to open the order detail. On mobile, orders display as cards instead of a table.
-- **Action buttons** — Status advance/revert (managers), New Order, Kitchen, Cashier, Edit Event, and Back to events.
+- **Cards de resumo** — Total de pedidos, total de refeições, receita, valor recebido e saldo pendente.
+- **Filtros** — Filtrar a lista de pedidos por status, tipo (no local/para levar) e situação de pagamento (pago/pendente).
+- **Tabela de pedidos** — Mostra nome, telefone, tipo, itens, total, valor pago e status. Clique em qualquer linha para abrir o detalhe do pedido. No celular, pedidos são exibidos como cards em vez de tabela.
+- **Botões de ação** — Avançar/reverter status (gestores), Novo Pedido, Cozinha, Caixa, Editar Campanha e Voltar às campanhas.
 
-## People
+## Pessoas
 
-The system maintains a simple directory of people (customers) with name and phone. People are created automatically when a new order is placed with an unrecognized name. When creating subsequent orders, typing in the customer field searches existing people for quick selection.
+O sistema mantém um diretório simples de pessoas (clientes) com nome e telefone. Pessoas são criadas automaticamente quando um novo pedido é feito com um nome desconhecido. Ao criar pedidos seguintes, digitar no campo de cliente busca pessoas existentes para seleção rápida.
 
-People are shared across all events — a customer who ordered in January will appear in the typeahead when creating a March order.
+Pessoas são compartilhadas entre todos os eventos — alguém que fez pedido em janeiro aparecerá na busca ao criar um pedido em março.

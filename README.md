@@ -1,61 +1,61 @@
 # e-Vinha
 
-Spiritist Centre operations management web app built for [Joanna de Angelis Spiritist Study Group](https://jassg.ca).
+Aplicação web de gestão de operações de centro espírita, desenvolvida para o [Grupo de Estudo Espírita Joanna de Angelis](https://jassg.ca).
 
-## Prerequisites
+## Pré-requisitos
 
 - [Node.js](https://nodejs.org/) 22+
 - [Python](https://python.org/) 3.14+
-- [uv](https://docs.astral.sh/uv/) (Python package manager)
-- A [Firebase](https://firebase.google.com/) project with Firestore enabled (Native mode)
+- [uv](https://docs.astral.sh/uv/) (gerenciador de pacotes Python)
+- Um projeto [Firebase](https://firebase.google.com/) com Firestore habilitado (modo Native)
 
-## Setup
+## Configuração
 
-1. Clone the repository and copy the environment file:
+1. Clone o repositório e copie o arquivo de ambiente:
 
    ```bash
    cp .env.example .env
    ```
 
-2. Fill in a random JWT secret and your frontend URL in `.env`.
+2. Preencha um segredo JWT aleatório e a URL do frontend no `.env`.
 
-3. Download a Firebase service account key from the Firebase console (Project Settings > Service Accounts > Generate New Private Key) and save it as `backend/service-account.json`. This file is gitignored.
+3. Baixe uma chave de service account do Firebase no console (Configurações do Projeto > Contas de Serviço > Gerar Nova Chave Privada) e salve como `backend/service-account.json`. Este arquivo está no gitignore.
 
-4. Install dependencies:
+4. Instale as dependências:
 
    ```bash
    cd backend && uv sync
    cd frontend && npm install
    ```
 
-5. Run both dev servers (stops both on Ctrl+C):
+5. Rode ambos os servidores de desenvolvimento (para com Ctrl+C):
 
    ```powershell
    .\dev.ps1
    ```
 
-   Or run them individually in separate terminals:
+   Ou rode individualmente em terminais separados:
 
    ```bash
-   # Backend (port 8080)
+   # Backend (porta 8080)
    cd backend && uv run uvicorn evinha.main:app --port 8080 --reload
 
-   # Frontend (port 5173)
+   # Frontend (porta 5173)
    cd frontend && npm run dev
    ```
 
-6. Open http://localhost:5173 in your browser. The first user to log in automatically becomes admin.
+6. Abra http://localhost:5173 no navegador. A primeira pessoa a fazer login se torna admin automaticamente.
 
-## Permissions
+## Permissões
 
-Users are stored in Firestore. Each user has an admin flag and per-section role assignments. The four sections are: **Library**, **Book Store**, **Fundraisers**, and **Bookings**. Each section supports three role tiers: **Viewer** (read-only), **Editor** (create/modify/delete), and **Manager** (full control). Admins bypass all section checks.
+Pessoas são armazenadas no Firestore. Cada pessoa tem uma flag de admin e roles por seção. As quatro seções são: **Biblioteca**, **Livraria**, **Campanhas** e **Reservas**. Cada seção suporta três níveis de role: **Leitura** (somente consulta), **Edição** (criar/modificar/excluir) e **Gestão** (controle total). Admins ignoram todas as verificações de seção.
 
-Admins can manage users and assign permissions at `/admin`.
+Admins podem gerenciar pessoas e atribuir permissões em `/admin`.
 
-## Internationalization
+## Internacionalização
 
-The UI supports English (en-CA) and Portuguese (pt-BR). The language is auto-detected from your browser settings and can be toggled manually via the language switcher. Translation files are in `frontend/src/lib/i18n/`.
+A interface suporta português (pt-BR) e inglês (en-CA). O idioma é detectado automaticamente a partir das configurações do navegador (padrão: pt-BR) e pode ser alterado manualmente pelo seletor de idioma. Os arquivos de tradução ficam em `frontend/src/lib/i18n/`.
 
-## License
+## Licença
 
 [Affero General Public License 3.0](LICENSE)
